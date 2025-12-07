@@ -1,16 +1,20 @@
 import axios from "axios";
 
+const isLocalhost = window.location.hostname === "localhost";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "/api",
+  baseURL: isLocalhost
+    ? "http://localhost:5000/api"
+    : "https://n8nproject-9t83.onrender.com/api",
 });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    console.error("API error:", err?.response || err?.message);
+    throw err;
   }
-  return config;
-});
+);
 
 export const signupRequest = (payload) =>
   api.post("/auth/register", payload).then((res) => res.data);
