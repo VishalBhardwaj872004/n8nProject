@@ -1,23 +1,21 @@
-
-import axios from 'axios'
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: '/api'
-})
+  baseURL: import.meta.env.VITE_API_URL || "/api",
+});
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem("token");
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  return config
-})
+  return config;
+});
 
 export const signupRequest = (payload) =>
-  api.post('/auth/register', payload).then((res) => res.data)
+  api.post("/auth/register", payload).then((res) => res.data);
 
 export const loginRequest = (payload) =>
-  api.post('/auth/login', payload).then((res) => res.data)
+  api.post("/auth/login", payload).then((res) => res.data);
 
-export const getMe = () =>
-  api.get('/auth/me').then((res) => res.data)
+export const getMe = () => api.get("/auth/me").then((res) => res.data);
